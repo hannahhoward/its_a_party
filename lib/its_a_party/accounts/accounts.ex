@@ -45,7 +45,7 @@ defmodule ItsAParty.Accounts do
 
   """
   @callback create_user() :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
-  @callback create_user(attrs :: Map.t) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
+  @callback create_user(attrs :: Map.t()) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
 
   @doc """
   Updates a user.
@@ -59,7 +59,8 @@ defmodule ItsAParty.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback update_user(user :: %User{}, attrs :: Map.t) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
+  @callback update_user(user :: %User{}, attrs :: Map.t()) ::
+              {:ok, %User{}} | {:error, %Ecto.Changeset{}}
 
   @doc """
   Deletes a User.
@@ -85,4 +86,22 @@ defmodule ItsAParty.Accounts do
 
   """
   @callback change_user(user :: %User{}) :: %Ecto.Changeset{}
+
+  @doc """
+  Verifies a User by email and password credentials
+
+  ## Examples
+
+      iex> authenticate_by_email_and_password(email, password)
+      {:ok, %User{}}
+
+      iex> authenticate_by_email_and_password(email, password)
+      {:error, :not_found }
+
+      iex> authenticate_by_email_and_password(email, password)
+      {:error, :unauthorized }
+
+  """
+  @callback authenticate_by_email_and_password(email :: String.t(), password :: String.t()) ::
+              {:ok, %User{}} | {:error, :not_found} | {:error, :unauthorized}
 end

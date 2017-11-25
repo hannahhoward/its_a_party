@@ -6,16 +6,24 @@ defmodule ItsAParty.AccountsImplTest do
   describe "users" do
     alias ItsAParty.Accounts.User
 
+    @password "applesauce"
+    @invalid_password "cheese"
+    @invalid_email "bilbo@bilbo.com"
     @valid_attrs %{
-      first_name: "some first_name", 
-      last_name: "some last_name", 
+      first_name: "some first_name",
+      last_name: "some last_name",
       roles: [],
       credential: %{
         email: "apples@apples.com",
-        password: "password",
-        password_confirmation: "password",
-      }}
-    @update_attrs %{first_name: "some updated first_name", last_name: "some updated last_name", roles: []}
+        password: @password,
+        password_confirmation: @password
+      }
+    }
+    @update_attrs %{
+      first_name: "some updated first_name",
+      last_name: "some updated last_name",
+      roles: []
+    }
     @invalid_attrs %{first_name: nil, last_name: nil, roles: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -73,6 +81,31 @@ defmodule ItsAParty.AccountsImplTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
-  end
 
+    test "authenticate_by_email_and_password with a valid email+password returns the user" do
+      user = user_fixture()
+
+      assert {:ok, user} ==
+               Accounts.authenticate_by_email_and_password(user.credential.email, @password)
+    end
+
+    test "authenticate_by_email_and_password given an invalid email returns not found" do
+      user_fixture()
+
+      assert {:error, :not_found} =
+               Accounts.authenticate_by_email_and_password(@invalid_email, @password)
+
+      assert {:error, :not_found} = Accounts.authenticate_by_email_and_password(nil, @password)
+    end
+
+    test "authenticate_by_email_and_password given an invalid password returns not authorized" do
+      user = user_fixture()
+
+      assert {:error, :unauthorized} =
+               Accounts.authenticate_by_email_and_password(
+                 user.credential.email,
+                 @invalid_password
+               )
+    end
+  end
 end

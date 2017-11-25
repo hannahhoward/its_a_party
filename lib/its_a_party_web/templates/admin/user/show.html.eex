@@ -17,6 +17,10 @@
     <%= @user.roles %>
   </li>
 
+  <li>
+    <strong>Email:</strong>
+    <%= @user.credential.email %>
+  </li>
 </ul>
 
 <span><%= link "Edit", to: admin_user_path(@conn, :edit, @user) %></span>

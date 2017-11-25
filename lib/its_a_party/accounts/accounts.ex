@@ -6,7 +6,7 @@ defmodule ItsAParty.Accounts do
   import Ecto.Query, warn: false
   alias ItsAParty.Repo
 
-  alias ItsAParty.Accounts.User
+  alias ItsAParty.Accounts.{User, Credential}
 
   @doc """
   Returns the list of users.
@@ -19,6 +19,7 @@ defmodule ItsAParty.Accounts do
   """
   def list_users do
     Repo.all(User)
+    |> Repo.preload(:credential)
   end
 
   @doc """
@@ -35,7 +36,10 @@ defmodule ItsAParty.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:credential)
+  end
 
   @doc """
   Creates a user.
@@ -50,8 +54,9 @@ defmodule ItsAParty.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
+    %User{roles: []}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, required: true, with: &Credential.changeset/2)
     |> Repo.insert()
   end
 

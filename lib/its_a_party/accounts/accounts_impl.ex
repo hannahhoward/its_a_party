@@ -1,9 +1,14 @@
-defmodule ItsAParty.Accounts do
-  alias ItsAParty.Accounts.User
+defmodule ItsAParty.Accounts.AccountsImpl do
+  @behaviour ItsAParty.Accounts
 
   @moduledoc """
   The Accounts context.
   """
+
+  import Ecto.Query, warn: false
+  alias ItsAParty.Repo
+
+  alias ItsAParty.Accounts.{User, Credential}
 
   @doc """
   Returns the list of users.
@@ -14,7 +19,11 @@ defmodule ItsAParty.Accounts do
       [%User{}, ...]
 
   """
-  @callback list_users() :: [%User{}]
+  @impl true
+  def list_users do
+    Repo.all(User)
+    |> Repo.preload(:credential)
+  end
 
   @doc """
   Gets a single user.
@@ -30,7 +39,11 @@ defmodule ItsAParty.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  @callback get_user!(id :: term) :: %User{} | nil | no_return
+  @impl true
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:credential)
+  end
 
   @doc """
   Creates a user.
@@ -44,8 +57,13 @@ defmodule ItsAParty.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback create_user() :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
-  @callback create_user(attrs :: Map.t) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
+  @impl true
+  def create_user(attrs \\ %{}) do
+    %User{roles: []}
+    |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, required: true, with: &Credential.changeset/2)
+    |> Repo.insert()
+  end
 
   @doc """
   Updates a user.
@@ -59,7 +77,13 @@ defmodule ItsAParty.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback update_user(user :: %User{}, attrs :: Map.t) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
+  @impl true
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+    |> Repo.update()
+  end
 
   @doc """
   Deletes a User.
@@ -73,7 +97,10 @@ defmodule ItsAParty.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback delete_user(user :: %User{}) :: {:ok, %User{}} | {:error, %Ecto.Changeset{}}
+  @impl true
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
@@ -84,5 +111,8 @@ defmodule ItsAParty.Accounts do
       %Ecto.Changeset{source: %User{}}
 
   """
-  @callback change_user(user :: %User{}) :: %Ecto.Changeset{}
+  @impl true
+  def change_user(%User{} = user) do
+    User.changeset(user, %{})
+  end
 end

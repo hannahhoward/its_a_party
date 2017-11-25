@@ -1,0 +1,1 @@
+Mox.defmock(ItsAParty.AccountsMock, for: ItsAParty.Accounts)

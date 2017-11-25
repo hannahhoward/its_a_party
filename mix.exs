@@ -42,7 +42,9 @@ defmodule ItsAParty.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:comeonin, "~> 4.0"},
-      {:bcrypt_elixir, "~> 1.0"}
+      {:bcrypt_elixir, "~> 1.0"},
+      {:mox, "~> 0.3.1"},
+      {:ex_machina, "~> 2.1"}
     ]
   end
 

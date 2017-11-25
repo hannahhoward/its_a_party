@@ -56,3 +56,5 @@ config :its_a_party, ItsAParty.Repo,
   database: "its_a_party_dev",
   hostname: "localhost",
   pool_size: 10
+
+config(:its_a_party, :accounts, ItsAParty.Accounts.AccountsImpl)

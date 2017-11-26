@@ -4,6 +4,7 @@ defmodule ItsAPartyWeb.SessionControllerTest do
   alias ItsAParty.Accounts.User
   import Mox
   import Plug.Test
+  import ItsAPartyWeb.LoginHelpers
 
   @email "bilbo@bilbo.com"
   @password "password12"
@@ -70,8 +71,7 @@ defmodule ItsAPartyWeb.SessionControllerTest do
   describe "delete session" do
     test "removes user from session and goes to login", %{conn: conn} do
       conn =
-        conn
-        |> init_test_session(%{current_user_id: 1})
+        sign_in(conn, %User{id: 1})
         |> delete(session_path(conn, :delete))
 
       assert get_session(conn, :current_user_id) == nil

@@ -75,4 +75,9 @@ defmodule ItsAParty.Accounts.AccountsImpl do
       true -> {:error, :unauthorized}
     end
   end
+
+  @impl true
+  def is_admin?(%User{roles: roles}) do
+    Enum.member?(roles, "admin")
+  end
 end

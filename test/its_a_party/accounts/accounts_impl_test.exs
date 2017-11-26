@@ -107,5 +107,16 @@ defmodule ItsAParty.AccountsImplTest do
                  @invalid_password
                )
     end
+
+    test "is_admin? returns true if user is an admin" do
+      user = user_fixture(%{roles: ["admin"]})
+
+      assert Accounts.is_admin?(user) == true
+    end
+
+    test "is_admin? returns false if user is not an admin" do
+      user = user_fixture()
+      assert Accounts.is_admin?(user) == false
+    end
   end
 end

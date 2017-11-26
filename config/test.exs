@@ -19,5 +19,4 @@ config :its_a_party, ItsAParty.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config(:its_a_party, :accounts, ItsAParty.AccountsMock)
-
 config :bcrypt_elixir, :log_rounds, 4

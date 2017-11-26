@@ -104,4 +104,17 @@ defmodule ItsAParty.Accounts do
   """
   @callback authenticate_by_email_and_password(email :: String.t(), password :: String.t()) ::
               {:ok, %User{}} | {:error, :not_found} | {:error, :unauthorized}
+
+  @doc """
+  Verifies if a user is an admin
+
+  ## Examples
+
+      iex> is_admin?(user_who_has_admin_role)
+      true
+
+      iex> is_admin?(user_who_does_not_have_admin_role)
+      false
+  """
+  @callback is_admin?(user :: %User{}) :: true | false
 end

@@ -5,13 +5,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
   import ItsAPartyWeb.LoginHelpers
   import Mox
 
-  @create_attrs %{first_name: "some first_name", last_name: "some last_name", roles: []}
-  @update_attrs %{
-    first_name: "some updated first_name",
-    last_name: "some updated last_name",
-    roles: []
-  }
-  @invalid_attrs %{first_name: nil, last_name: nil, roles: nil}
+  @user_attrs %{}
 
   setup :verify_on_exit!
 
@@ -81,7 +75,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_non_admin
-        |> post(admin_user_path(conn, :create), user: @create_attrs)
+        |> post(admin_user_path(conn, :create), user: @user_attrs)
 
       assert redirected_to(conn) == page_path(conn, :index)
     end
@@ -93,7 +87,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_admin
-        |> post(admin_user_path(conn, :create), user: @create_attrs)
+        |> post(admin_user_path(conn, :create), user: %{})
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == admin_user_path(conn, :show, id)
@@ -106,7 +100,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_admin
-        |> post(admin_user_path(conn, :create), user: @invalid_attrs)
+        |> post(admin_user_path(conn, :create), user: @user_attrs)
 
       assert html_response(conn, 200) =~ "New User"
     end
@@ -143,7 +137,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
 
   describe "update user" do
     test "when not logged in it redirects to login", %{conn: conn} do
-      conn = put(conn, admin_user_path(conn, :update, %User{id: 1}), user: @update_attrs)
+      conn = put(conn, admin_user_path(conn, :update, %User{id: 1}), user: @user_attrs)
       assert redirected_to(conn) == session_path(conn, :new)
     end
 
@@ -151,7 +145,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_non_admin
-        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @update_attrs)
+        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @user_attrs)
 
       assert redirected_to(conn) == page_path(conn, :index)
     end
@@ -164,7 +158,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_admin
-        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @update_attrs)
+        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @user_attrs)
 
       assert redirected_to(conn) == admin_user_path(conn, :show, %User{id: 1})
     end
@@ -177,7 +171,7 @@ defmodule ItsAPartyWeb.Admin.UserControllerTest do
       conn =
         conn
         |> sign_in_as_admin
-        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @invalid_attrs)
+        |> put(admin_user_path(conn, :update, %User{id: 1}), user: @user_attrs)
 
       assert html_response(conn, 200) =~ "Edit User"
     end

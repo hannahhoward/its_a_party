@@ -1,0 +1,32 @@
+<h2>Listing Contacts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Email</th>
+      <th>Phone number</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for contact <- @contacts do %>
+    <tr>
+      <td><%= contact.first_name %></td>
+      <td><%= contact.last_name %></td>
+      <td><%= contact.email %></td>
+      <td><%= contact.phone_number %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: contact_path(@conn, :show, contact), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: contact_path(@conn, :edit, contact), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: contact_path(@conn, :delete, contact), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Contact", to: contact_path(@conn, :new) %></span>

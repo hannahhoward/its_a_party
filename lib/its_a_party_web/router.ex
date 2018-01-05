@@ -7,7 +7,6 @@ defmodule ItsAPartyWeb.Router do
     plug(:fetch_flash)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    plug(ItsAPartyWeb.Plugs.CurrentUser)
   end
 
   pipeline :api do
@@ -17,6 +16,7 @@ defmodule ItsAPartyWeb.Router do
   scope "/", ItsAPartyWeb do
     # Use the default browser stack
     pipe_through(:browser)
+    resources("/contacts", ContactController)
     get("/login", SessionController, :new)
     post("/login", SessionController, :create)
     delete("/logout", SessionController, :delete)

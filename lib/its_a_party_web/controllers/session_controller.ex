@@ -2,6 +2,8 @@ defmodule ItsAPartyWeb.SessionController do
   use ItsAPartyWeb, :controller
   @accounts Application.get_env(:its_a_party, :accounts)
 
+  plug(ItsAPartyWeb.Plugs.CurrentUser when action in [:delete])
+
   def new(conn, _params) do
     render(conn, "new.html")
   end

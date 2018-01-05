@@ -64,3 +64,4 @@ config :its_a_party, ItsAParty.Repo,
   pool_size: 10
 
 config(:its_a_party, :accounts, ItsAParty.Accounts.AccountsImpl)
+config(:its_a_party, :contacts, ItsAParty.Contacts.ContactsImpl)

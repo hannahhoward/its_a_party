@@ -21,7 +21,7 @@ defmodule ItsAPartyWeb.LoginHelpers do
 
   def sign_in_as_non_admin(conn, %User{} = user \\ %User{id: 1}) do
     AccountsMock
-    |> expect(:is_admin?, fn _ -> false end)
+    |> stub(:is_admin?, fn _ -> false end)
 
     sign_in(conn, user)
   end
